@@ -2,6 +2,8 @@ package com.ejercicio.mapper.test.mapper;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test; 
 import org.junit.runner.RunWith; 
@@ -13,11 +15,14 @@ import com.ejercicio.config.AppConfig;
 import com.ejercicio.mapper.AutomovilMapper;
 import com.ejercicio.model.Automovil;
 
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfig.class})
 public class AutomovilMapperTest {
     @Autowired
     private AutomovilMapper automovilMapper;
+
+    public Log log = LogFactory.getLog(AutomovilMapperTest.class);
 
     @Test
 	public void ingresaAutomovilTest(){  
@@ -29,9 +34,10 @@ public class AutomovilMapperTest {
 			automovil.setModelo("Golf GTI");
             automovil.setanioFabricacion(1976);
 
-			automovilMapper.ingresaAutomovil(automovil);  
+			automovilMapper.ingresaAutomovil(automovil);
 			Assert.assertTrue(true);
 		} catch (Exception e) {
+			log.error(e);
 			Assert.fail(e.getMessage());
 		}			
 	}
@@ -44,7 +50,11 @@ public class AutomovilMapperTest {
 		try {
 			automoviles=automovilMapper.consultaAutomoviles();	
 			Assert.assertNotNull(automoviles);
+			for (Automovil automovil : automoviles) {
+				log.info(automovil.toString());
+			}
 		} catch (Exception e) {
+			log.error(e);
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -55,7 +65,7 @@ public class AutomovilMapperTest {
 		
 		try {
 			Automovil automovil = new Automovil();
-			automovil.setId(16);
+			automovil.setId(6);
 			automovil.setMarca("Hyundai");
 			automovil.setModelo("Elantra N");
             automovil.setanioFabricacion(2022);
@@ -63,6 +73,7 @@ public class AutomovilMapperTest {
 			automovilMapper.actualizaAutomovil(automovil);
 			Assert.assertTrue(true);
 		} catch (Exception e) {
+			log.error(e);
 			Assert.fail(e.getMessage());
 		}			
 	}
@@ -75,6 +86,7 @@ public class AutomovilMapperTest {
 			automovilMapper.eliminaAutomovil(3);
 			Assert.assertTrue(true);
 		} catch (Exception e) {
+			log.error(e);
 			Assert.fail(e.getMessage());
 		}
 		

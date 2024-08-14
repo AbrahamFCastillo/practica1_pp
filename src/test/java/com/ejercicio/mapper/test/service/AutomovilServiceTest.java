@@ -2,6 +2,8 @@ package com.ejercicio.mapper.test.service;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test; 
 import org.junit.runner.RunWith;
@@ -10,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ejercicio.config.AppConfig;
+import com.ejercicio.exception.ServiceException;
 import com.ejercicio.model.Automovil;
 import com.ejercicio.service.AutomovilService;
 
@@ -19,6 +22,8 @@ public class AutomovilServiceTest {
 
     @Autowired
     private AutomovilService automovilService;
+
+    public Log log = LogFactory.getLog(AutomovilServiceTest.class);
 
     @Test
 	public void ingresaAutomovilTest(){
@@ -32,8 +37,9 @@ public class AutomovilServiceTest {
 			
 			automovilService.ingresaAutomovil(automovil);
 			Assert.assertTrue(true);
-		} catch (Exception e) {
-			Assert.fail(e.getMessage());
+		} catch (ServiceException e) {
+			log.error(e.getCodigoError()+" - "+e.getMensaje());
+			Assert.fail(e.getCodigoError()+" - "+e.getMensaje());
 		}	
 	}
 
@@ -45,7 +51,11 @@ public class AutomovilServiceTest {
 		try {
 			automoviles=automovilService.consultaAutomoviles();	
 			Assert.assertNotNull(automoviles);
+			for (Automovil automovil : automoviles) {
+				log.info(automovil.toString());
+			} 
 		} catch (Exception e) {
+			log.error(e);
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -58,7 +68,9 @@ public class AutomovilServiceTest {
 		try {
 			automovil=automovilService.consultaAutomovil(7);
 			Assert.assertNotNull(automovil);
+			log.info(automovil.toString());
 		} catch (Exception e) {
+			log.error(e);
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -77,6 +89,7 @@ public class AutomovilServiceTest {
 			automovilService.actualizaAutomovil(automovil);
 			Assert.assertTrue(true);
 		} catch (Exception e) {
+			log.error(e);
 			Assert.fail(e.getMessage());
 		}
 				
@@ -90,9 +103,9 @@ public class AutomovilServiceTest {
 			automovilService.eliminaAutomovil(17); //se ejecuta antes de la consulta al mismo id
 			Assert.assertTrue(true);
 		} catch (Exception e) {
+			log.error(e);
 			Assert.fail(e.getMessage());
 		}
 		
 	}
-    
 }
